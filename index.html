@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readme Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Readme.so Editor</h1>
+    </header>
+    <main>
+        <div class="sidebar">
+            <h2>Sections</h2>
+            <p>Click on a section below to edit the contents</p>
+            <div class="section-list" id="section-list"></div>
+            <p>Click on a section below to add it to your README</p>
+            <input type="text" placeholder="Search for a section" id="search-input">
+            <button class="custom-section">+ Custom Section</button>
+            <div class="section-buttons">
+                <button id="title-description">Title and Description</button>
+                <button id="api-reference">API Reference</button>
+                <button id="acknowledgements">Acknowledgements</button>
+                <button id="appendix">Appendix</button>
+                <button id="license">License</button>
+                <button id="authors">Authors</button>
+                <button id="badges">Badges</button>
+                <button id="color-reference">Color Reference</button>
+                <button id="contributing">Contributing</button>
+                <button id="demo">Demo</button>
+                <button id="deployment">Deployment</button>
+                <button id="documentation">Documentation</button>
+                <button id="environment-variables">Environment Variables</button>
+                <button id="features">Features</button>
+                <button id="feedback">Feedback</button>
+                <button id="github-about-me">Github Profile - About Me</button>
+                <button id="github-introduction">Github Profile - Introduction</button>
+                <button id="github-links">Github Profile - Links</button>
+                <button id="github-other">Github Profile - Other</button>
+                <button id="github-skills">Github Profile - Skills</button>
+                <button id="installation">Installation</button>
+                <button id="lessons">Lessons</button>
+                <button id="logo">Logo</button>
+                <button id="optimizations">Optimizations</button>
+                <button id="related">Related</button>
+                <button id="roadmap">Roadmap</button>
+                <button id="run-locally">Run Locally</button>
+                <button id="screenshots">Screenshots</button>
+                <button id="support">Support</button>
+                <button id="tech">Tech</button>
+                <button id="running-tests">Running Tests</button>
+                <button id="usage-examples">Usage/Examples</button>
+                <button id="used-by">Used By</button>
+            </div>
+        </div>
+        <div class="editor">
+            <textarea id="markdown-input" placeholder="Write your README here..."></textarea>
+        </div>
+        <div class="preview">
+            <div id="markdown-preview"></div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
