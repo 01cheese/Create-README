@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const markdownInput = document.getElementById('markdown-input');
     const markdownPreview = document.getElementById('markdown-preview');
     const downloadButton = document.getElementById('download-btn');
-    const themeToggleButton = document.getElementById('theme-toggle');
-    const body = document.body;
 
     // Predefined sections and their markdown content
     const sections = {
@@ -41,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         "Used By": "## Used By\nList of organizations or people using this project."
     };
 
-    // Function to load sections in the sidebar
+    // Load sections in the sidebar
     function loadSections(filter = "") {
         sectionList.innerHTML = '';
         const filteredSections = Object.keys(sections).filter(section =>
@@ -60,13 +58,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Function to update markdown preview
-    function updatePreview() {
-        const markdownText = markdownInput.value;
-        markdownPreview.innerHTML = marked.parse(markdownText);
-    }
+// Function to escape HTML character
 
-    // Function to download the markdown as a .md file
+function updatePreview() {
+    const markdownText = markdownInput.value;
+    const parsedMarkdown = marked.parse(markdownText);
+
+    // Строгая конфигурация DOMPurify с разрешением только безопасных тегов и изображений
+    const purifyConfig = {
+        ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'h1', 'h2', 'h3', 'ul', 'li', 'ol', 'code', 'pre', 'blockquote', 'img'],  // Разрешаем <img>
+        ALLOWED_ATTR: ['src', 'alt', 'title'],  // Разрешаем атрибуты для изображений
+        ALLOWED_URI_REGEXP: /^https?:\/\//i,  // Только безопасные ссылки для изображений
+        FORBID_TAGS: ['script', 'form', 'input', 'iframe'],  // Запрещаем опасные теги
+        FORBID_ATTR: ['onerror', 'onload', 'style'],  // Запрещаем опасные атрибуты
+    };
+
+    const sanitizedContent = DOMPurify.sanitize(parsedMarkdown, purifyConfig);  // Очищаем с конфигурацией
+    markdownPreview.innerHTML = sanitizedContent;
+}
+
+
+
+
+    // Download markdown as .md file
     function downloadMarkdown() {
         const markdownText = markdownInput.value;
         const blob = new Blob([markdownText], { type: 'text/markdown' });
@@ -76,19 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
         link.click();
     }
 
-    // Add event listener for download button
+    // Add event listeners
     downloadButton.addEventListener('click', downloadMarkdown);
-
-    // Event listener for searching sections
-    searchInput.addEventListener('input', function() {
-        const query = searchInput.value;
-        loadSections(query);
-    });
-
-    // Event listener to update the preview as the user types
+    searchInput.addEventListener('input', () => loadSections(searchInput.value));
     markdownInput.addEventListener('input', updatePreview);
 
-    // Load all sections initially
+    // Initial load
     loadSections();
-
 });
