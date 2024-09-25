@@ -1,115 +1,94 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const input = document.getElementById('markdown-input');
-    const preview = document.getElementById('markdown-preview');
+    // Elements
     const sectionList = document.getElementById('section-list');
     const searchInput = document.getElementById('search-input');
-    const sectionButtons = document.querySelectorAll('.section-buttons button');
-    let jsonData = {};
+    const markdownInput = document.getElementById('markdown-input');
+    const markdownPreview = document.getElementById('markdown-preview');
+    const downloadButton = document.getElementById('download-btn');
+    const themeToggleButton = document.getElementById('theme-toggle');
+    const body = document.body;
 
-    // Function to update the preview
-    const updatePreview = () => {
-        preview.textContent = input.value;
+    // Predefined sections and their markdown content
+    const sections = {
+        "Title and Description": "# Project Title\nA brief description of the project.",
+        "API Reference": "## API Reference\nDetails about the API.",
+        "Acknowledgements": "## Acknowledgements\nThanks to everyone who contributed.",
+        "Appendix": "## Appendix\nAdditional information.",
+        "License": "## License\nThis project is licensed under the MIT License.",
+        "Authors": "## Authors\nList of authors.",
+        "Badges": "## Badges\n![badge](https://img.shields.io/badge/badge-text-brightgreen)",
+        "Color Reference": "## Color Reference\nA color palette used in the project.",
+        "Contributing": "## Contributing\nHow to contribute to the project.",
+        "Demo": "## Demo\nLink to a demo of the project.",
+        "Deployment": "## Deployment\nInstructions for deployment.",
+        "Documentation": "## Documentation\nLink to the documentation.",
+        "Environment Variables": "## Environment Variables\nList of environment variables.",
+        "Features": "## Features\nList of features.",
+        "Feedback": "## Feedback\nWays to give feedback.",
+        "Github Profile - About Me": "## About Me\nDetails about the author.",
+        "Installation": "## Installation\nInstructions for installing the project.",
+        "Lessons": "## Lessons Learned\nKey lessons learned during the project.",
+        "Logo": "## Logo\n![logo](logo.png)",
+        "Optimizations": "## Optimizations\nOptimizations made for the project.",
+        "Related": "## Related Projects\nList of related projects.",
+        "Roadmap": "## Roadmap\nFuture goals and milestones.",
+        "Run Locally": "## Run Locally\nInstructions to run the project locally.",
+        "Screenshots": "## Screenshots\n![screenshot](screenshot.png)",
+        "Support": "## Support\nHow to get support.",
+        "Tech": "## Technologies Used\nList of technologies used.",
+        "Running Tests": "## Running Tests\nHow to run tests.",
+        "Usage/Examples": "## Usage/Examples\nExamples of how to use the project.",
+        "Used By": "## Used By\nList of organizations or people using this project."
     };
 
-    // Event listener for input changes
-    input.addEventListener('input', updatePreview);
+    // Function to load sections in the sidebar
+    function loadSections(filter = "") {
+        sectionList.innerHTML = '';
+        const filteredSections = Object.keys(sections).filter(section =>
+            section.toLowerCase().includes(filter.toLowerCase())
+        );
 
-    // Function to add a new section item
-    const addSectionItem = (sectionName, markdownContent, buttonElement) => {
-        if (!document.getElementById(`section-${sectionName.toLowerCase().replace(/ /g, '-')}`)) {
-            const sectionItem = document.createElement('div');
-            sectionItem.classList.add('section-item');
-            sectionItem.id = `section-${sectionName.toLowerCase().replace(/ /g, '-')}`;
-            sectionItem.draggable = true;
-            sectionItem.innerHTML = `<span>${sectionName}</span>
-                                     <div class="icons">
-                                         <button class="refresh">⟳</button>
-                                         <button class="delete">🗑</button>
-                                     </div>`;
-
-            // Event listeners for the new buttons
-            sectionItem.querySelector('.delete').addEventListener('click', () => {
-                sectionItem.remove();
-                if (buttonElement) {
-                    buttonElement.style.display = 'block';
-                }
+        filteredSections.forEach(section => {
+            const sectionButton = document.createElement('button');
+            sectionButton.classList.add('section-item');
+            sectionButton.innerText = section;
+            sectionButton.addEventListener('click', () => {
+                markdownInput.value += sections[section] + '\n\n';
                 updatePreview();
             });
-
-            sectionItem.querySelector('.refresh').addEventListener('click', () => {
-                // Logic for refresh button can be added here
-            });
-
-            sectionList.appendChild(sectionItem);
-
-            // Add markdown content to the input
-            input.value += markdownContent;
-            updatePreview();
-
-            // Hide the button to prevent adding duplicate sections
-            if (buttonElement) {
-                buttonElement.style.display = 'none';
-            }
-
-            // Add drag and drop functionality
-            sectionItem.addEventListener('dragstart', dragStart);
-            sectionItem.addEventListener('dragover', dragOver);
-            sectionItem.addEventListener('drop', dragDrop);
-        } else {
-            alert(`${sectionName} is already added.`);
-        }
-    };
-
-    // Function to generate markdown content based on section name
-    function generateMarkdownContent(sectionName) {
-        if (jsonData[sectionName]) {
-            return jsonData[sectionName];
-        }
-        return `## ${sectionName}\n\nYour content here...\n\n`;
-    }
-
-    // Event listeners for section buttons
-    sectionButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const markdownContent = generateMarkdownContent(button.textContent);
-            addSectionItem(button.textContent, markdownContent, button);
+            sectionList.appendChild(sectionButton);
         });
+    }
+
+    // Function to update markdown preview
+    function updatePreview() {
+        const markdownText = markdownInput.value;
+        markdownPreview.innerHTML = marked.parse(markdownText);
+    }
+
+    // Function to download the markdown as a .md file
+    function downloadMarkdown() {
+        const markdownText = markdownInput.value;
+        const blob = new Blob([markdownText], { type: 'text/markdown' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'README.md';
+        link.click();
+    }
+
+    // Add event listener for download button
+    downloadButton.addEventListener('click', downloadMarkdown);
+
+    // Event listener for searching sections
+    searchInput.addEventListener('input', function() {
+        const query = searchInput.value;
+        loadSections(query);
     });
 
-    // Adding a custom section
-    document.querySelector('.custom-section').addEventListener('click', () => {
-        const customSectionName = prompt('Enter custom section name:');
-        if (customSectionName) {
-            const markdownContent = `## ${customSectionName}\n\nYour content here...\n\n`;
-            addSectionItem(customSectionName, markdownContent, null);
-        }
-    });
+    // Event listener to update the preview as the user types
+    markdownInput.addEventListener('input', updatePreview);
 
-    // Drag and Drop Functions
-    function dragStart(e) {
-        e.dataTransfer.setData('text/plain', e.target.id);
-    }
+    // Load all sections initially
+    loadSections();
 
-    function dragOver(e) {
-        e.preventDefault();
-    }
-
-    function dragDrop(e) {
-        e.preventDefault();
-        const id = e.dataTransfer.getData('text');
-        const draggableElement = document.getElementById(id);
-        const dropzone = e.target.closest('.section-item');
-        sectionList.insertBefore(draggableElement, dropzone);
-    }
-
-    // Load JSON data
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            jsonData = data;
-        })
-        .catch(error => console.error('Error loading JSON data:', error));
-
-    // Initial call to update the preview
-    updatePreview();
 });

@@ -44,6 +44,7 @@ main {
     border-radius: 4px;
     align-items: center;
     cursor: grab;
+    width: 250px;
 }
 
 .section-item .icons {
@@ -113,40 +114,59 @@ input[type="text"] {
     box-sizing: border-box;
 }
 
-/* Additional styles for Markdown rendering */
+/* Styles for Markdown Preview */
+#markdown-preview {
+    padding: 1rem;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    white-space: pre-wrap;
+}
+
 #markdown-preview h1, #markdown-preview h2, #markdown-preview h3, #markdown-preview h4, #markdown-preview h5, #markdown-preview h6 {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
+    margin: 1em 0;
+    font-weight: bold;
 }
 
 #markdown-preview p {
-    margin-bottom: 1em;
+    margin: 1em 0;
 }
 
 #markdown-preview pre {
-    background-color: #f6f8fa;
+    background-color: #2d2d2d;
+    color: #f8f8f8;
     padding: 1em;
-    border-radius: 4px;
+    border-radius: 5px;
     overflow-x: auto;
 }
 
 #markdown-preview code {
-    background-color: #f6f8fa;
+    background-color: #f8f8f8;
+    color: #d6336c;
     padding: 0.2em 0.4em;
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
-#markdown-preview table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1em;
+#markdown-preview blockquote {
+    padding: 0.5em 1em;
+    margin: 1em 0;
+    border-left: 5px solid #ccc;
+    background-color: #f9f9f9;
 }
 
-#markdown-preview th, #markdown-preview td {
-    border: 1px solid #ddd;
-    padding: 0.5em;
+.download-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-#markdown-preview th {
-    background-color: #f6f8fa;
+.download-button:hover {
+    background-color: #45a049;
 }
